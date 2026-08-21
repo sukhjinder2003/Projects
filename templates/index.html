@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Employee Retention Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>Employee Retention Prediction System</h1>
+
+            <p>
+                Enter employee details to predict whether the employee
+                is likely to leave the company.
+            </p>
+
+        </div>
+
+
+        <form method="POST">
+
+            <div class="form-grid">
+
+                <!-- Age -->
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="Age" min="18" max="100" required>
+                </div>
+
+
+                <!-- Business Travel -->
+                <div class="form-group">
+                    <label>Business Travel</label>
+
+                    <select name="BusinessTravel">
+                        <option value="Travel_Rarely">Travel Rarely</option>
+                        <option value="Travel_Frequently">Travel Frequently</option>
+                        <option value="Non-Travel">Non Travel</option>
+                    </select>
+                </div>
+
+
+                <!-- Daily Rate -->
+                <div class="form-group">
+                    <label>Daily Rate</label>
+                    <input type="number" name="DailyRate" required>
+                </div>
+
+
+                <!-- Department -->
+                <div class="form-group">
+                    <label>Department</label>
+
+                    <select name="Department">
+                        <option value="Sales">Sales</option>
+                        <option value="Research & Development">
+                            Research & Development
+                        </option>
+                        <option value="Human Resources">
+                            Human Resources
+                        </option>
+                    </select>
+                </div>
+
+
+                <!-- Distance From Home -->
+                <div class="form-group">
+                    <label>Distance From Home</label>
+                    <input type="number"
+                           name="DistanceFromHome"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Education -->
+                <div class="form-group">
+                    <label>Education Level</label>
+
+                    <select name="Education">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+
+                <!-- Education Field -->
+                <div class="form-group">
+                    <label>Education Field</label>
+
+                    <select name="EducationField">
+                        <option value="Life Sciences">Life Sciences</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Technical Degree">Technical Degree</option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+
+                <!-- Environment Satisfaction -->
+                <div class="form-group">
+                    <label>Environment Satisfaction</label>
+
+                    <select name="EnvironmentSatisfaction">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4 - High</option>
+                    </select>
+                </div>
+
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label>Gender</label>
+
+                    <select name="Gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+
+
+                <!-- Hourly Rate -->
+                <div class="form-group">
+                    <label>Hourly Rate</label>
+                    <input type="number" name="HourlyRate" required>
+                </div>
+
+
+                <!-- Job Involvement -->
+                <div class="form-group">
+                    <label>Job Involvement</label>
+
+                    <select name="JobInvolvement">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4 - High</option>
+                    </select>
+                </div>
+
+
+                <!-- Job Level -->
+                <div class="form-group">
+                    <label>Job Level</label>
+
+                    <select name="JobLevel">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+
+                <!-- Job Role -->
+                <div class="form-group">
+                    <label>Job Role</label>
+
+                    <select name="JobRole">
+                        <option value="Sales Executive">Sales Executive</option>
+                        <option value="Research Scientist">Research Scientist</option>
+                        <option value="Laboratory Technician">
+                            Laboratory Technician
+                        </option>
+                        <option value="Manufacturing Director">
+                            Manufacturing Director
+                        </option>
+                        <option value="Healthcare Representative">
+                            Healthcare Representative
+                        </option>
+                        <option value="Manager">Manager</option>
+                        <option value="Sales Representative">
+                            Sales Representative
+                        </option>
+                        <option value="Research Director">
+                            Research Director
+                        </option>
+                        <option value="Human Resources">
+                            Human Resources
+                        </option>
+                    </select>
+                </div>
+
+
+                <!-- Job Satisfaction -->
+                <div class="form-group">
+                    <label>Job Satisfaction</label>
+
+                    <select name="JobSatisfaction">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4 - High</option>
+                    </select>
+                </div>
+
+
+                <!-- Marital Status -->
+                <div class="form-group">
+                    <label>Marital Status</label>
+
+                    <select name="MaritalStatus">
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                    </select>
+                </div>
+
+
+                <!-- Monthly Income -->
+                <div class="form-group">
+                    <label>Monthly Income</label>
+                    <input type="number" name="MonthlyIncome" required>
+                </div>
+
+
+                <!-- Monthly Rate -->
+                <div class="form-group">
+                    <label>Monthly Rate</label>
+                    <input type="number" name="MonthlyRate" required>
+                </div>
+
+
+                <!-- Number of Companies Worked -->
+                <div class="form-group">
+                    <label>Number of Companies Worked</label>
+                    <input type="number"
+                           name="NumCompaniesWorked"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Over Time -->
+                <div class="form-group">
+                    <label>Over Time</label>
+
+                    <select name="OverTime">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+
+                <!-- Percent Salary Hike -->
+                <div class="form-group">
+                    <label>Percent Salary Hike</label>
+                    <input type="number"
+                           name="PercentSalaryHike"
+                           required>
+                </div>
+
+
+                <!-- Performance Rating -->
+                <div class="form-group">
+                    <label>Performance Rating</label>
+
+                    <select name="PerformanceRating">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+
+                <!-- Relationship Satisfaction -->
+                <div class="form-group">
+                    <label>Relationship Satisfaction</label>
+
+                    <select name="RelationshipSatisfaction">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4 - High</option>
+                    </select>
+                </div>
+
+
+                <!-- Stock Option Level -->
+                <div class="form-group">
+                    <label>Stock Option Level</label>
+
+                    <select name="StockOptionLevel">
+                        <option value="0">0</option>
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+
+
+                <!-- Total Working Years -->
+                <div class="form-group">
+                    <label>Total Working Years</label>
+                    <input type="number"
+                           name="TotalWorkingYears"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Training Times Last Year -->
+                <div class="form-group">
+                    <label>Training Times Last Year</label>
+                    <input type="number"
+                           name="TrainingTimesLastYear"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Work Life Balance -->
+                <div class="form-group">
+                    <label>Work Life Balance</label>
+
+                    <select name="WorkLifeBalance">
+                        <option value="1">1 - Bad</option>
+                        <option value="2">2 - Good</option>
+                        <option value="3" selected>3 - Better</option>
+                        <option value="4">4 - Best</option>
+                    </select>
+                </div>
+
+
+                <!-- Years At Company -->
+                <div class="form-group">
+                    <label>Years At Company</label>
+                    <input type="number"
+                           name="YearsAtCompany"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Years In Current Role -->
+                <div class="form-group">
+                    <label>Years In Current Role</label>
+                    <input type="number"
+                           name="YearsInCurrentRole"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Years Since Last Promotion -->
+                <div class="form-group">
+                    <label>Years Since Last Promotion</label>
+                    <input type="number"
+                           name="YearsSinceLastPromotion"
+                           min="0"
+                           required>
+                </div>
+
+
+                <!-- Years With Current Manager -->
+                <div class="form-group">
+                    <label>Years With Current Manager</label>
+                    <input type="number"
+                           name="YearsWithCurrManager"
+                           min="0"
+                           required>
+                </div>
+
+            </div>
+
+
+            <button type="submit">
+                Predict Employee Retention
+            </button>
+
+        </form>
+
+
+        {% if result %}
+
+        <div class="result">
+
+            {% if result.error %}
+
+                <h2>Error</h2>
+
+                <p>{{ result.error }}</p>
+
+            {% else %}
+
+                <h2>Prediction Result</h2>
+
+                <h3>{{ result.prediction }}</h3>
+
+                <p>
+                    Attrition Probability:
+                    <strong>{{ result.probability }}</strong>
+                </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
