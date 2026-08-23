@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MindWatch AI - Stress & Emotion Detection</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+.container {
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 12px;
+    width: 60%;
+    margin: auto;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+}
+
+textarea {
+    width: 90%;
+    height: 120px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+
+button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    background: #2575fc;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #1a5edb;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.low { color: green; }
+.medium { color: orange; }
+.high { color: red; }
+
+.loading {
+    display: none;
+    font-size: 18px;
+    color: #2575fc;
+}
+</style>
+
+<script>
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+</script>
+
+</head>
+
+<body>
+
+<h1>🧠 MindWatch AI</h1>
+<p>AI-powered Stress & Emotion Detection</p>
+
+<div class="container">
+
+<form method="POST" onsubmit="showLoading()">
+<textarea name="text" placeholder="Write how you feel... (e.g. I feel stressed and overwhelmed)" required></textarea>
+<br>
+<button type="submit">Analyze</button>
+</form>
+
+<div id="loading" class="loading">⏳ Analyzing...</div>
+
+{% if prediction %}
+<div class="result 
+    {% if prediction == 'Low' %} low
+    {% elif prediction == 'Medium' %} medium
+    {% else %} high
+    {% endif %}
+">
+Predicted Stress Level: {{ prediction }}
+</div>
+{% endif %}
+
+{% if emotion %}
+<div class="result">
+Detected Emotion: <b>{{ emotion }}</b>
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
+                                                                       
