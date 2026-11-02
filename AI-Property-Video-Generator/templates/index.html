@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Property Video Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="hero">
+  <nav class="topbar"><span class="brand">PropertyReel</span><a href="#builder" class="topbar-link">Create a video</a></nav>
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <h1>Turn listing photos into a video you can post today.</h1>
+      <p>Enter the property details, add 4 to 8 photos and pick a look. The app writes the captions from your facts only, then renders an MP4 for YouTube, Reels or your feed.</p>
+      <a class="btn btn-primary" href="#builder">Start a video</a>
+      <p class="hero-note">Runs on your computer. Nothing is uploaded to a third party unless you turn on AI scripts.</p>
+    </div>
+    <svg class="plan" viewBox="0 0 420 320" role="img" aria-label="Floor plan line drawing">
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" pathLength="1">
+        <path class="draw" pathLength="1" d="M20 20 H400 V300 H20 Z"/>
+        <path class="draw" pathLength="1" d="M20 150 H190 M250 150 H400"/>
+        <path class="draw" pathLength="1" d="M190 20 V110 M190 190 V300"/>
+        <path class="draw" pathLength="1" d="M280 150 V300"/>
+        <path class="draw thin" pathLength="1" d="M190 110 A40 40 0 0 1 230 150"/>
+        <path class="draw thin" pathLength="1" d="M250 150 A30 30 0 0 0 280 180"/>
+        <path class="draw thin" pathLength="1" d="M80 20 H140 M300 20 H360 M400 80 V130 M20 220 V270"/>
+      </g>
+      <g class="plan-labels" fill="currentColor"><text x="40" y="90">Living</text><text x="210" y="90">Bedroom</text><text x="40" y="240">Kitchen</text><text x="205" y="240">Bath</text><text x="300" y="240">Bedroom</text></g>
+      <circle class="tag" cx="350" cy="62" r="26"/><text class="tag-text" x="350" y="68" text-anchor="middle">Sold?</text>
+    </svg>
+  </div>
+</header>
+
+<main id="builder" class="builder">
+  <form id="property-form" class="form" novalidate autocomplete="off">
+    <div class="form-head">
+      <h2>Build your video</h2>
+      <button type="button" id="fill-sample" class="btn btn-quiet">Fill with sample data</button>
+    </div>
+
+    <section class="block">
+      <h3><span class="step">1</span>Property details</h3>
+      <div class="grid">
+        <label class="span-2">Property name<input name="property_name" maxlength="80" required placeholder="e.g. Azure Heights Residency"></label>
+        <label class="span-2">Location<input name="location" maxlength="100" required placeholder="Street, area, city"></label>
+        <label>Price<input name="price" maxlength="40" required placeholder="e.g. $385,000"></label>
+        <label>Property type
+          <select name="property_type" required>
+            <option value="" disabled selected>Choose a type</option>
+            {% for t in property_types %}<option>{{ t }}</option>{% endfor %}
+          </select>
+        </label>
+        <label>Bedrooms<input name="bedrooms" type="number" min="0" max="50" inputmode="numeric" required placeholder="0 if none"></label>
+        <label>Bathrooms<input name="bathrooms" type="number" min="0" max="50" inputmode="numeric" required placeholder="0 if none"></label>
+        <label class="span-2">Area (sq. ft.)<input name="area" inputmode="decimal" required placeholder="e.g. 1850"></label>
+        <label class="span-2">Key features and amenities
+          <textarea name="features" rows="3" required placeholder="One per line or separated by commas. Up to 8."></textarea>
+          <small>Only what you list here appears in the video.</small>
+        </label>
+        <label class="span-2">Contact information
+          <textarea name="contact" rows="3" maxlength="330" required placeholder="Name&#10;Phone&#10;Email"></textarea>
+          <small>Up to 4 lines.</small>
+        </label>
+        <label class="span-2">Call-to-action text<input name="cta" maxlength="60" required placeholder="e.g. Book a private viewing"></label>
+      </div>
+    </section>
+
+    <section class="block">
+      <h3><span class="step">2</span>Photos</h3>
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Add photos">
+        <strong>Drop photos here or choose files</strong>
+        <span>JPG, JPEG or PNG. {{ cfg.min }} to {{ cfg.max }} images, up to {{ cfg.maxMB }} MB each.</span>
+        <input id="file-input" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" multiple hidden>
+        <input id="replace-input" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden>
+      </div>
+      <p id="image-count" class="count" aria-live="polite">No photos added yet.</p>
+      <ul id="previews" class="previews"></ul>
+    </section>
+
+    <section class="block">
+      <h3><span class="step">3</span>Look and format</h3>
+      <fieldset class="choices styles">
+        <legend>Video style</legend>
+        {% for key, s in styles.items() %}
+        <label class="choice">
+          <input type="radio" name="style" value="{{ key }}" {{ 'checked' if loop.first }}>
+          <span class="choice-body">
+            <span class="swatch" style="background:linear-gradient(135deg,{{ s.swatch[0] }} 55%,{{ s.swatch[1] }} 55%)"></span>
+            <strong>{{ s.label }}</strong><em>{{ s.description }}</em>
+          </span>
+        </label>
+        {% endfor %}
+      </fieldset>
+      <fieldset class="choices aspects">
+        <legend>Format</legend>
+        {% for ratio, where, shape in aspects %}
+        <label class="choice">
+          <input type="radio" name="aspect" value="{{ ratio }}" {{ 'checked' if loop.first }}>
+          <span class="choice-body"><span class="shape s{{ loop.index }}"></span><strong>{{ ratio }}</strong><em>{{ where }}</em></span>
+        </label>
+        {% endfor %}
+      </fieldset>
+      <div class="grid options">
+        <label>Background music
+          <select name="music">
+            <option value="">No music</option>
+            {% for t in music_tracks %}<option value="{{ t.file }}">{{ t.label }}</option>{% endfor %}
+          </select>
+          {% if not music_tracks %}<small>Add royalty-free MP3 files to static/music to enable this.</small>{% endif %}
+        </label>
+        <label class="switch">
+          <input type="checkbox" name="use_ai" {{ 'checked' if ai_enabled else 'disabled' }}>
+          <span>Write the script with AI</span>
+          <small>{% if ai_enabled %}Uses your Anthropic key. Falls back to templates if it fails.{% else %}No API key set, so the template script is used.{% endif %}</small>
+        </label>
+      </div>
+    </section>
+
+    <div id="errors" class="errors" role="alert" hidden></div>
+    <button id="generate" type="submit" class="btn btn-primary btn-wide">Generate video</button>
+  </form>
+
+  <aside class="result" id="result" aria-live="polite">
+    <h2>Your video</h2>
+    <div id="empty" class="empty">
+      <div class="frame-hint"></div>
+      <p>Your preview appears here once the video has been rendered.</p>
+    </div>
+    <div id="progress" class="progress" hidden>
+      <div class="bar"><span id="bar-fill"></span></div>
+      <p id="progress-msg">Starting…</p>
+    </div>
+    <div id="done" hidden>
+      <video id="player" controls playsinline preload="metadata"></video>
+      <a id="download" class="btn btn-primary btn-wide" href="#">Download MP4</a>
+      <details id="script-details" class="script">
+        <summary>See the script used</summary>
+        <div id="script-body"></div>
+      </details>
+    </div>
+  </aside>
+</main>
+
+<footer class="footer">Videos are deleted from the server folder after a few hours. Add only photos you have the right to use.</footer>
+
+<script>window.APP_CONFIG = {{ cfg|tojson }};</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
